@@ -9,7 +9,6 @@ using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Web;
 using WebApi.OutputCache.Core.Cache;
-using WebApi.OutputCache.V2.Demo.resources;
 
 namespace web_api_demo
 {
