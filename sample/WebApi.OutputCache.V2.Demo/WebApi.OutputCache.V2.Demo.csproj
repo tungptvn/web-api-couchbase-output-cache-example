@@ -46,6 +46,10 @@
       <HintPath>..\..\packages\Common.Logging.Core.3.3.1\lib\net40\Common.Logging.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Couchbase.AspNet, Version=2.0.0.9, Culture=neutral, PublicKeyToken=05e9c6b5a9ec94c2, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\CouchbaseAspNet.2.0.0\lib\net45\Couchbase.AspNet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Couchbase.NetClient, Version=2.4.4.0, Culture=neutral, PublicKeyToken=05e9c6b5a9ec94c2, processorArchitecture=MSIL">
       <HintPath>..\..\packages\CouchbaseNetClient.2.4.4\lib\net45\Couchbase.NetClient.dll</HintPath>
       <Private>True</Private>
@@ -84,6 +88,7 @@
   <ItemGroup>
     <Compile Include="CouchbaseCache.cs" />
     <Compile Include="IgnoreController.cs" />
+    <Compile Include="resources\Utils.cs" />
     <Compile Include="Teams2Controller.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Team.cs" />

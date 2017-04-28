@@ -3,12 +3,14 @@ using Couchbase.Core;
 using NLog;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using WebApi.OutputCache.Core.Cache;
+using WebApi.OutputCache.V2.Demo.resources;
 
 namespace WebApi.OutputCache.V2.Demo
 {
@@ -41,19 +43,30 @@ namespace WebApi.OutputCache.V2.Demo
 
         public void Add(string key, object o, DateTimeOffset expiration, string dependsOnKey = null)
         {
-          
+            var stop_watch = new Stopwatch();
+            stop_watch.Start();
+            logger.Debug(string.Format("=== begin Add ({0},{1},{2},{3} ", key, o.ToJson(), expiration, dependsOnKey));
             var expi = ToExpiration(expiration.DateTime);
-         
+
             var retval = _bucket.Get<object>(key).Value;
 
             if (retval == null)
             {
-                _bucket.Insert(key, o, expi);
-                retval = o;
+                if (retval is byte[])
+                {
+                    var ms = new MemoryStream();
+                    new BinaryFormatter().Serialize(ms, o);
+                    _bucket.Insert(key, ms, expi);
+                }
+                else
+                {
+                    _bucket.Insert(key, o, expi);
+                }
             }
-
+            logger.Debug("+ insert {0}", o.ToJson());
+            logger.Debug("=== end Add");
             return;
-           
+
         }
         public bool Contains(string key)
         {
@@ -70,14 +83,19 @@ namespace WebApi.OutputCache.V2.Demo
 
         public object Get(string key)
         {
-
+            logger.Debug(string.Format("=== start  Get ({0})", key));
             var result = _bucket.Get<object>(key);
+            logger.Debug("+ result : {0}", result.ToJson());
+            logger.Debug("=== end Get");
             return result.Value;
         }
 
         public T Get<T>(string key) where T : class
         {
-            var result = _bucket.Get<object>(key);
+            logger.Debug(string.Format("=== start  Get ({0})", key));
+            var result = _bucket.Get<T>(key);
+            logger.Debug("+ result : {0}", result.ToJson());
+            logger.Debug("=== end Get");
             return result.Value as T;
         }
 
@@ -92,10 +110,10 @@ namespace WebApi.OutputCache.V2.Demo
 
         }
 
-       
-        private static uint ToExpiration(DateTime utcExpiry)
+
+        private static uint ToExpiration(DateTimeOffset utcExpiry)
         {
-            return (uint)(DateTime.SpecifyKind(utcExpiry, DateTimeKind.Utc) - DateTime.UtcNow).TotalSeconds;
+            return (uint)(utcExpiry - DateTime.Now).TotalSeconds;
         }
     }
 }

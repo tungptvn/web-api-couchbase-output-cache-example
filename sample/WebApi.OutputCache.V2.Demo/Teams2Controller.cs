@@ -17,7 +17,7 @@ namespace WebApi.OutputCache.V2.Demo
                 new Team {Id = 2, League = "NHL", Name = "Habs"},
             };
 
-        [CacheOutput(ClientTimeSpan = 5000, ServerTimeSpan = 5000)]
+        [CacheOutput(ClientTimeSpan = 500, ServerTimeSpan = 500)]
         public string Get()
         {
             return DateTime.Now.ToLongTimeString();

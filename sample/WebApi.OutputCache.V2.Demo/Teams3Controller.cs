@@ -2,10 +2,14 @@
 using Couchbase.Core;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Web.Http;
+using System.Web.Http.Controllers;
 using WebApi.OutputCache.V2.TimeAttributes;
 
 namespace WebApi.OutputCache.V2.Demo
@@ -26,17 +30,16 @@ namespace WebApi.OutputCache.V2.Demo
             };
 
         //[CacheOutput(ClientTimeSpan = 50, ServerTimeSpan = 50)]
-        public IEnumerable<string> Get()
+        public object Get()
         {
-            var keyList = new List<string>();
-            var query = _bucket.CreateQuery("dev_WebapiCacheDemoView", "WebapiCacheDemoView", false);
-            var result = _bucket.Query<dynamic>(query);
-            foreach (var row in result.Rows)
-            {
-                keyList.Add(row.Key);
-            }
-
-            return keyList;
+            var result = _bucket.Get<byte[]>("webapi.outputcache.v2.demo.teams2controller-get:application/json; charset=utf-8").Value;
+            MemoryStream ms = new MemoryStream(result);
+            
+                IFormatter br = new BinaryFormatter();
+                var str =  (object)br.Deserialize(ms);
+                return str;
+            
+            //return Content(HttpStatusCode.OK, result);
         }
 
         [CacheOutputUntil(2016, 7, 20)]
