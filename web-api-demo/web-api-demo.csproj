@@ -274,10 +274,6 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\sample\WebApi.OutputCache.V2.Demo\WebApi.OutputCache.V2.Demo.csproj">
-      <Project>{FC585541-1F28-4D49-BCD9-1A08A90B2C66}</Project>
-      <Name>WebApi.OutputCache.V2.Demo</Name>
-    </ProjectReference>
     <ProjectReference Include="..\src\WebApi.OutputCache.Core\WebApi.OutputCache.Core.csproj">
       <Project>{3e45fa0b-c465-4de9-9bc3-40a606b73e84}</Project>
       <Name>WebApi.OutputCache.Core</Name>
